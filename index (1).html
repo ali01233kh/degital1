@@ -1,0 +1,108 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>العلاقات العامة الرقمية في البيئة الافتراضية</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">العلاقات العامة الرقمية</div>
+        <ul class="nav-links">
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="practices.html">أساليب الممارسة</a></li>
+            <li><a href="variables.html">المتغيرات الرقمية</a></li>
+            <li><a href="global.html">الأهمية العالمية</a></li>
+            <li><a href="media.html">الوسائط</a></li>
+            <li><a href="case-study.html">دراسة حالة</a></li>
+            <li><a href="about.html">عن المشروع</a></li>
+        </ul>
+        <div class="burger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <img src="assets/g1.jpg" alt="صورة بيئية" class="hero-image">
+        <h1>العلاقات العامة الرقمية في البيئة الافتراضية</h1>
+        <p>مشروع أكاديمي يهدف إلى استكشاف كيفية استخدام المنظمات للعلاقات العامة الرقمية لتعزيز التواصل في العالم الافتراضي</p>
+        <a href="#intro" class="btn">تعرف على المزيد</a>
+    </section>
+
+    <!-- Introduction Section -->
+    <section id="intro" class="section">
+        <h2>مقدمة عن المشروع</h2>
+        <p>يهدف هذا المشروع إلى دراسة دور العلاقات العامة الرقمية في تعزيز التواصل بين المنظمات والجمهور في البيئة الافتراضية. نركز على منظمة Greenpeace كمثال تطبيقي، حيث تستخدم استراتيجيات رقمية متقدمة لنشر رسالتها البيئية.</p>
+        <img src="assets/g2.jpg" alt="نشاط بيئي" class="section-image">
+    </section>
+
+    <!-- PR Definition Section -->
+    <section class="section">
+        <h2>ما هي العلاقات العامة الرقمية؟</h2>
+        <p>العلاقات العامة الرقمية هي استخدام التقنيات الرقمية ومنصات الإنترنت لإدارة العلاقات مع الجمهور، بناء الثقة، ونشر الرسائل بفعالية. تشمل أدواتها وسائل التواصل الاجتماعي، المواقع الإلكترونية، والمؤتمرات الافتراضية.</p>
+    </section>
+
+    <!-- Goals Section -->
+    <section class="section">
+        <h2>أهداف الموقع</h2>
+        <ul>
+            <li>توضيح أهمية العلاقات العامة الرقمية في العصر الحديث.</li>
+            <li>عرض أساليب وممارسات فعالة تستخدمها المنظمات.</li>
+            <li>تحليل دراسة حالة لمنظمة عالمية (Greenpeace).</li>
+            <li>تقديم محتوى مرئي وسمعي لدعم المشروع.</li>
+        </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>مشروع أكاديمي - العلاقات العامة الرقمية في البيئة الافتراضية © 2025</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
