@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -72,17 +33,17 @@
         <p>تعتمد العلاقات العامة الرقمية على مجموعة من الأدوات والاستراتيجيات لتعزيز التواصل. فيما يلي أبرز الأساليب:</p>
         <div class="grid">
             <div class="card">
-                <img src="assets/g3.jpg" alt="البريد الإلكتروني" class="card-image">
+                <img src="g3.jpg" alt="البريد الإلكتروني" class="card-image">
                 <h3>البريد الإلكتروني</h3>
-                <p>يُستخدم لإرسال نشرات إخبارية وتحدحيثات مباشرة للجمهور.</p>
+                <p>يُستخدم لإرسال نشرات إخبارية وتحديثات مباشرة للجمهور.</p>
             </div>
             <div class="card">
-                <img src="assets/g4.jpg" alt="وسائل التواصل الاجتماعي" class="card-image">
+                <img src="g4.jpg" alt="وسائل التواصل الاجتماعي" class="card-image">
                 <h3>وسائل التواصل الاجتماعي</h3>
                 <p>منصات مثل تويتر وإنستغرام لنشر المحتوى وتحفيز التفاعل.</p>
             </div>
             <div class="card">
-                <img src="assets/g5.jpg" alt="المؤتمرات الافتراضية" class="card-image">
+                <img src="g5.jpg" alt="المؤتمرات الافتراضية" class="card-image">
                 <h3>المؤتمرات الافتراضية</h3>
                 <p>تنظيم فعاليات عبر Zoom أو Teams لتعزيز التواصل.</p>
             </div>
