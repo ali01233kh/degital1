@@ -1,0 +1,100 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دراسة حالة: Greenpeace</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">العلاقات العامة الرقمية</div>
+        <ul class="nav-links">
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="practices.html">أساليب الممارسة</a></li>
+            <li><a href="variables.html">المتغيرات الرقمية</a></li>
+            <li><a href="global.html">الأهمية العالمية</a></li>
+            <li><a href="media.html">الوسائط</a></li>
+            <li><a href="case-study.html">دراسة حالة</a></li>
+            <li><a href="about.html">عن المشروع</a></li>
+        </ul>
+        <div class="burger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </nav>
+
+    <!-- Case Study Section -->
+    <section class="section">
+        <h2>دراسة حالة: Greenpeace</h2>
+        <p>تُعد منظمة Greenpeace واحدة من أبرز المنظمات غير الحكومية التي تستخدم العلاقات العامة الرقمية بفعالية للترويج لقضايا بيئية. تعتمد المنظمة على استراتيجيات رقمية للوصول إلى جمهور عالمي وتحفيزه على اتخاذ إجراءات لحماية البيئة.</p>
+        
+        <h3>كيف تستخدم Greenpeace العلاقات العامة الرقمية؟</h3>
+        <ul>
+            <li><strong>حملات وسائل التواصل الاجتماعي:</strong> تنشر Greenpeace فيديوهات وصور مؤثرة عبر منصات مثل تويتر وإنستغرام لتسليط الضوء على قضايا مثل إزالة الغابات وتلوث المحيطات.</li>
+            <li><strong>العرائض الرقمية:</strong> تستخدم المنظمة مواقعها الإلكترونية لجمع توقيعات على عرائض تدعو إلى تغييرات سياسية أو بيئية.</li>
+            <li><strong>الفعاليات الافتراضية:</strong> تنظم Greenpeace ندوات عبر الإنترنت لمناقشة القضايا البيئية وإشراك الجمهور.</li>
+        </ul>
+
+        <div class="grid">
+            <div class="card">
+                <img src="g6.jpg" alt="حملة بيئية" class="card-image">
+                <p>حملة رقمية للتوعية بتلوث المحيطات.</p>
+            </div>
+            <div class="card">
+                <img src="g7.jpg" alt="احتجاج رقمي" class="card-image">
+                <p>احتجاج افتراضي ضد إزالة الغابات.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>مشروع أكاديمي - العلاقات العامة الرقمية في البيئة الافتراضية © 2025</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
